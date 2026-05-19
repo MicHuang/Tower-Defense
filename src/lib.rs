@@ -3,8 +3,22 @@ use bevy::prelude::*;
 use crate::components::map::Tile;
 use crate::components::player::{Player, WaveState};
 use crate::data::map_config::MapConfig;
+use crate::data::wave_config::WaveConfigs;
+use crate::events::damage_event::DamageEvent;
+use crate::events::fire_event::FireEvent;
+use crate::events::kill_event::KillEvent;
 use crate::resources::game_state::GameState;
 use crate::resources::grid_map::FlatGrid;
+use crate::resources::spatial_grid::SpatialGrid;
+use crate::systems::combat::combat_system;
+use crate::systems::input::input_system;
+use crate::systems::movement::movement_system;
+use crate::systems::projectile::projectile_movement_system;
+use crate::systems::projectile_spawner::projectile_spawner_system;
+use crate::systems::scoring::scoring_system;
+use crate::systems::wave::wave_system;
+use crate::ui::hud::{despawn_hud, spawn_hud};
+use crate::ui::menu::{despawn_menu, play_button_clicked, spawn_menu};
 
 pub mod components;
 pub mod data;
@@ -21,9 +35,42 @@ pub mod wasm;
 pub fn run_game() {
     App::new()
         .add_plugins(DefaultPlugins)
+        // Events
+        .add_event::<FireEvent>()
+        .add_event::<DamageEvent>()
+        .add_event::<KillEvent>()
+        // State
         .init_state::<GameState>()
+        // Resources
         .insert_resource(Player::default())
         .insert_resource(WaveState::default())
+        .insert_resource(WaveConfigs::load().expect("Failed to load wave configs"))
+        .insert_resource(SpatialGrid::default())
+        // Menu systems
+        .add_systems(OnEnter(GameState::Menu), spawn_menu)
+        .add_systems(OnExit(GameState::Menu), despawn_menu)
+        .add_systems(
+            Update,
+            play_button_clicked.run_if(in_state(GameState::Menu)),
+        )
+        // HUD systems
+        .add_systems(OnEnter(GameState::Playing), spawn_hud)
+        .add_systems(OnExit(GameState::Playing), despawn_hud)
+        // Gameplay systems with GameSet ordering
+        .add_systems(
+            Update,
+            (
+                wave_system,
+                movement_system,
+                combat_system,
+                projectile_spawner_system,
+                projectile_movement_system,
+                scoring_system,
+                input_system,
+            )
+                .run_if(in_state(GameState::Playing)),
+        )
+        // Startup
         .add_systems(Startup, setup)
         .run();
 }
