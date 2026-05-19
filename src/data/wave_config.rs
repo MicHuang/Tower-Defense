@@ -1,3 +1,4 @@
+use bevy::prelude::*;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Clone)]
@@ -10,7 +11,7 @@ pub struct WaveDef {
     pub steal_amount: i32,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Resource)]
 pub struct WaveConfigs {
     pub wave: Vec<WaveDef>,
 }
