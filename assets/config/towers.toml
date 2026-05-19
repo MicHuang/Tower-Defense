@@ -1,0 +1,9 @@
+[tower.bottle]
+name = "Bottle Tower"
+damage = 15.0
+range = 3.0
+attack_cooldown = 0.8
+projectile_speed = 200.0
+upgrade_prices = [100, 200, 400]
+sell_ratios = [0.5, 0.5, 0.5]
+cell_image = "tower_bottle.png"
