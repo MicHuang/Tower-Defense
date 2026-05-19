@@ -1,3 +1,3 @@
 fn main() {
-    println!("Hello, world!");
+    tower_defense::run_game();
 }
