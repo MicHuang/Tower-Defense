@@ -1,0 +1,23 @@
+[[wave]]
+spawn_count = 5
+spawn_interval = 1.0
+hitpoints = 50
+speed = 60.0
+reward = 10
+steal_amount = 1
+
+[[wave]]
+spawn_count = 8
+spawn_interval = 0.8
+hitpoints = 75
+speed = 65.0
+reward = 15
+steal_amount = 1
+
+[[wave]]
+spawn_count = 12
+spawn_interval = 0.6
+hitpoints = 100
+speed = 70.0
+reward = 20
+steal_amount = 2

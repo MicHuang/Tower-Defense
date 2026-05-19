@@ -1,7 +1,9 @@
 use bevy::prelude::*;
 
 use crate::components::map::Tile;
+use crate::components::player::{Player, WaveState};
 use crate::data::map_config::MapConfig;
+use crate::resources::game_state::GameState;
 use crate::resources::grid_map::FlatGrid;
 
 pub mod components;
@@ -19,6 +21,9 @@ pub mod wasm;
 pub fn run_game() {
     App::new()
         .add_plugins(DefaultPlugins)
+        .init_state::<GameState>()
+        .insert_resource(Player::default())
+        .insert_resource(WaveState::default())
         .add_systems(Startup, setup)
         .run();
 }
