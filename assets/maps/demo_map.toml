@@ -1,0 +1,15 @@
+width = 8
+height = 6
+start_points = [{ x = 0, y = 2 }]
+end_points = [{ x = 7, y = 4 }]
+paths = [
+    [{ x = 0, y = 2 }, { x = 3, y = 2 }, { x = 3, y = 4 }, { x = 7, y = 4 }]
+]
+tiles = [
+    "road_start", "empty",     "empty",     "road", "road", "road", "road", "road",
+    "empty",      "empty",     "empty",     "road", "empty", "empty", "empty", "empty",
+    "empty",      "empty",     "empty",     "road", "empty", "empty", "empty", "empty",
+    "empty",      "empty",     "empty",     "road", "empty", "empty", "empty", "road_end",
+    "empty",      "empty",     "empty",     "empty", "empty", "empty", "empty", "empty",
+    "empty",      "empty",     "empty",     "empty", "empty", "empty", "empty", "empty",
+]
