@@ -13,7 +13,7 @@ use crate::resources::spatial_grid::SpatialGrid;
 use crate::systems::combat::combat_system;
 use crate::systems::input::input_system;
 use crate::systems::movement::movement_system;
-use crate::systems::projectile::projectile_movement_system;
+use crate::systems::projectile::{projectile_movement_system, projectile_target_update_system};
 use crate::systems::projectile_spawner::projectile_spawner_system;
 use crate::systems::scoring::scoring_system;
 use crate::systems::wave::wave_system;
@@ -56,20 +56,17 @@ pub fn run_game() {
         // HUD systems
         .add_systems(OnEnter(GameState::Playing), spawn_hud)
         .add_systems(OnExit(GameState::Playing), despawn_hud)
-        // Gameplay systems with GameSet ordering
-        .add_systems(
-            Update,
-            (
-                wave_system,
-                movement_system,
-                combat_system,
-                projectile_spawner_system,
-                projectile_movement_system,
-                scoring_system,
-                input_system,
-            )
-                .run_if(in_state(GameState::Playing)),
-        )
+        // Gameplay systems
+        .add_systems(Update, (
+            projectile_target_update_system,
+            wave_system,
+            movement_system,
+            combat_system,
+            projectile_spawner_system,
+            projectile_movement_system,
+            scoring_system,
+            input_system,
+        ).run_if(in_state(GameState::Playing)))
         // Startup
         .add_systems(Startup, setup)
         .run();
