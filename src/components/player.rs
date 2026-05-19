@@ -17,6 +17,31 @@ impl Default for Player {
     }
 }
 
+impl Player {
+    pub fn earn_coins(&mut self, amount: i32) {
+        if amount > 0 {
+            self.coins = self.coins.saturating_add(amount as u32);
+        }
+    }
+
+    pub fn spend_coins(&mut self, amount: u32) -> bool {
+        if self.coins >= amount {
+            self.coins -= amount;
+            true
+        } else {
+            false
+        }
+    }
+
+    pub fn alter_life(&mut self, amount: i32) {
+        if amount < 0 {
+            self.life = self.life.saturating_sub(amount.unsigned_abs());
+        } else {
+            self.life = self.life.saturating_add(amount as u32);
+        }
+    }
+}
+
 #[derive(Resource)]
 pub struct WaveState {
     pub current_index: usize,
