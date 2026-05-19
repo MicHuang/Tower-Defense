@@ -1,0 +1,24 @@
+[package]
+name = "tower-defense"
+version = "0.1.0"
+edition = "2021"
+description = "Tower Defense game — Rust + Bevy rewrite"
+
+[lib]
+crate-type = ["lib", "cdylib", "staticlib"]
+
+[[bin]]
+name = "tower-defense"
+path = "src/main.rs"
+
+[dependencies]
+bevy = "0.15"
+serde = { version = "1", features = ["derive"] }
+toml = "0.8"
+serde_json = "1"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen = "0.2"
+
+[profile.release]
+opt-level = 3
