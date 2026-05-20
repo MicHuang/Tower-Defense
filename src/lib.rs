@@ -10,6 +10,7 @@ use crate::events::kill_event::KillEvent;
 use crate::resources::game_state::GameState;
 use crate::resources::grid_map::FlatGrid;
 use crate::resources::spatial_grid::SpatialGrid;
+use crate::save::save_system::save_load_input;
 use crate::systems::combat::combat_system;
 use crate::systems::effect::effect_system;
 use crate::systems::input::input_system;
@@ -19,6 +20,7 @@ use crate::systems::projectile_spawner::projectile_spawner_system;
 use crate::systems::scoring::scoring_system;
 use crate::systems::wave::wave_system;
 use crate::ui::hud::{despawn_hud, spawn_hud};
+use crate::ui::inspector::{inspector_click, inspector_display, InspectorTarget};
 use crate::ui::menu::{despawn_menu, play_button_clicked, spawn_menu};
 
 pub mod components;
@@ -45,6 +47,7 @@ pub fn run_game() {
         // Resources
         .insert_resource(Player::default())
         .insert_resource(WaveState::default())
+        .insert_resource(InspectorTarget::default())
         .insert_resource(WaveConfigs::load().expect("Failed to load wave configs"))
         .insert_resource(SpatialGrid::default())
         // Menu systems
@@ -68,7 +71,10 @@ pub fn run_game() {
             effect_system,
             scoring_system,
             input_system,
+            save_load_input,
+            inspector_click,
         ).run_if(in_state(GameState::Playing)))
+        .add_systems(Update, inspector_display)
         // Startup
         .add_systems(Startup, setup)
         .run();
