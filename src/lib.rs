@@ -1,5 +1,12 @@
 use bevy::prelude::*;
 
+#[cfg(not(target_arch = "wasm32"))]
+use bevy::winit::{UpdateMode, WinitSettings};
+#[cfg(not(target_arch = "wasm32"))]
+use std::time::Duration;
+#[cfg(not(target_arch = "wasm32"))]
+use bevy::window::{PresentMode, WindowPlugin};
+
 use crate::components::map::Tile;
 use crate::components::player::{Player, WaveState};
 use crate::data::map_config::MapConfig;
@@ -33,8 +40,26 @@ pub mod ui;
 pub mod wasm;
 
 pub fn run_game() {
-    App::new()
-        .add_plugins(DefaultPlugins)
+    let mut app = App::new();
+
+    // Desktop: enable VSync + limit update rate to ~60 FPS
+    #[cfg(not(target_arch = "wasm32"))]
+    app.add_plugins(DefaultPlugins.set(WindowPlugin {
+        primary_window: Some(Window {
+            present_mode: PresentMode::Fifo,
+            ..default()
+        }),
+        ..default()
+    }))
+    .insert_resource(WinitSettings {
+        focused_mode: UpdateMode::reactive(Duration::from_secs_f64(1.0 / 60.0)),
+        unfocused_mode: UpdateMode::reactive_low_power(Duration::from_secs_f64(1.0 / 60.0)),
+    });
+
+    #[cfg(target_arch = "wasm32")]
+    app.add_plugins(DefaultPlugins);
+
+    app
         // Events
         .add_event::<FireEvent>()
         .add_event::<DamageEvent>()
