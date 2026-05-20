@@ -11,6 +11,7 @@ use crate::resources::game_state::GameState;
 use crate::resources::grid_map::FlatGrid;
 use crate::resources::spatial_grid::SpatialGrid;
 use crate::systems::combat::combat_system;
+use crate::systems::effect::effect_system;
 use crate::systems::input::input_system;
 use crate::systems::movement::movement_system;
 use crate::systems::projectile::{projectile_movement_system, projectile_target_update_system};
@@ -64,6 +65,7 @@ pub fn run_game() {
             combat_system,
             projectile_spawner_system,
             projectile_movement_system,
+            effect_system,
             scoring_system,
             input_system,
         ).run_if(in_state(GameState::Playing)))

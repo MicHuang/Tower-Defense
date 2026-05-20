@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use crate::components::projectile::Projectile;
 use crate::components::critter::Critter;
+use crate::components::effect::{ActiveEffects, AppliedEffect};
 use crate::events::damage_event::DamageEvent;
 use crate::events::kill_event::KillEvent;
 
@@ -21,12 +22,12 @@ pub fn projectile_movement_system(
     time: Res<Time>,
     mut commands: Commands,
     mut projectile_query: Query<(Entity, &Projectile, &mut Transform)>,
-    mut critter_hp_query: Query<&mut Critter>,
+    mut critter_hp_query: Query<(&mut Critter, &mut ActiveEffects)>,
     mut damage_events: EventWriter<DamageEvent>,
     mut kill_events: EventWriter<KillEvent>,
 ) {
     // Collect hits to process outside the iteration to avoid borrow conflicts
-    let mut hits: Vec<(Entity, i32)> = Vec::new();
+    let mut hits: Vec<(Entity, i32, Option<AppliedEffect>)> = Vec::new();
 
     for (projectile_entity, projectile, mut transform) in projectile_query.iter_mut() {
         let current_pos = transform.translation.truncate();
@@ -38,7 +39,7 @@ pub fn projectile_movement_system(
         if step >= distance {
             // HIT!
             transform.translation = target_pos.extend(2.0);
-            hits.push((projectile.target, projectile.damage));
+            hits.push((projectile.target, projectile.damage, projectile.effect.clone()));
             commands.entity(projectile_entity).despawn();
         } else {
             let normalized = direction / distance;
@@ -47,10 +48,18 @@ pub fn projectile_movement_system(
     }
 
     // Process hits (separate from projectile iteration)
-    for (target, damage) in hits {
-        if let Ok(mut critter) = critter_hp_query.get_mut(target) {
+    for (target, damage, effect) in hits {
+        if let Ok((mut critter, mut active_effects)) = critter_hp_query.get_mut(target) {
             critter.hp -= damage;
-            damage_events.send(DamageEvent { target, amount: damage });
+            damage_events.send(DamageEvent {
+                target,
+                amount: damage,
+            });
+
+            // Apply effect to critter (Slow, Dot, etc.)
+            if let Some(effect) = effect {
+                active_effects.effects.push(effect);
+            }
 
             if critter.hp <= 0 {
                 let reward = critter.reward;
