@@ -31,6 +31,7 @@ pub fn spawn_menu(mut commands: Commands) {
 
         // Play button
         parent.spawn((
+            Button,
             Text::new("[ PLAY ]"),
             TextFont {
                 font_size: 36.0,
@@ -39,8 +40,10 @@ pub fn spawn_menu(mut commands: Commands) {
             TextColor(Color::srgb(0.0, 1.0, 0.0)), // GREEN
             Node {
                 margin: UiRect::top(Val::Px(40.0)),
+                padding: UiRect::all(Val::Px(16.0)),
                 ..default()
             },
+            BackgroundColor(Color::srgb(0.1, 0.1, 0.1)),
             PlayButton,
         ));
     });
