@@ -6,15 +6,12 @@ pub struct MenuRoot;
 
 pub fn spawn_menu(mut commands: Commands) {
     commands.spawn((
-        NodeBundle {
-            node: Node {
-                width: Val::Percent(100.0),
-                height: Val::Percent(100.0),
-                flex_direction: FlexDirection::Column,
-                justify_content: JustifyContent::Center,
-                align_items: AlignItems::Center,
-                ..default()
-            },
+        Node {
+            width: Val::Percent(100.0),
+            height: Val::Percent(100.0),
+            flex_direction: FlexDirection::Column,
+            justify_content: JustifyContent::Center,
+            align_items: AlignItems::Center,
             ..default()
         },
         MenuRoot,

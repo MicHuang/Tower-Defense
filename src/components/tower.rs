@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-#[derive(Component, Debug, Clone, Copy, PartialEq)]
+#[derive(Component, Debug, Clone, Copy, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum TowerType {
     Bottle,
     Fire,

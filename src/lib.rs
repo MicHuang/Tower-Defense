@@ -17,7 +17,9 @@ use crate::events::kill_event::KillEvent;
 use crate::resources::game_state::GameState;
 use crate::resources::grid_map::FlatGrid;
 use crate::resources::spatial_grid::SpatialGrid;
+use crate::save::save_system::save_load_input;
 use crate::systems::combat::combat_system;
+use crate::systems::effect::effect_system;
 use crate::systems::input::input_system;
 use crate::systems::movement::movement_system;
 use crate::systems::projectile::{projectile_movement_system, projectile_target_update_system};
@@ -25,6 +27,7 @@ use crate::systems::projectile_spawner::projectile_spawner_system;
 use crate::systems::scoring::scoring_system;
 use crate::systems::wave::wave_system;
 use crate::ui::hud::{despawn_hud, spawn_hud};
+use crate::ui::inspector::{inspector_click, inspector_display, InspectorTarget};
 use crate::ui::menu::{despawn_menu, play_button_clicked, spawn_menu};
 
 pub mod components;
@@ -69,6 +72,7 @@ pub fn run_game() {
         // Resources
         .insert_resource(Player::default())
         .insert_resource(WaveState::default())
+        .insert_resource(InspectorTarget::default())
         .insert_resource(WaveConfigs::load().expect("Failed to load wave configs"))
         .insert_resource(SpatialGrid::default())
         // Menu systems
@@ -89,16 +93,20 @@ pub fn run_game() {
             combat_system,
             projectile_spawner_system,
             projectile_movement_system,
+            effect_system,
             scoring_system,
             input_system,
+            save_load_input,
+            inspector_click,
         ).run_if(in_state(GameState::Playing)))
+        .add_systems(Update, inspector_display)
         // Startup
         .add_systems(Startup, setup)
         .run();
 }
 
 fn setup(mut commands: Commands) {
-    commands.spawn(Camera2dBundle::default());
+    commands.spawn(Camera2d);
 
     let map_config = MapConfig::load().expect("Failed to load map config");
     let grid = FlatGrid::from_config(&map_config);
@@ -119,19 +127,18 @@ fn setup(mut commands: Commands) {
                 Tile::Empty => Color::srgb(0.2, 0.2, 0.2),
             };
 
-            commands.spawn(SpriteBundle {
-                sprite: Sprite {
+            commands.spawn((
+                Sprite {
                     color,
                     custom_size: Some(Vec2::new(cell_size - 1.0, cell_size - 1.0)),
                     ..default()
                 },
-                transform: Transform::from_xyz(
+                Transform::from_xyz(
                     offset_x + x as f32 * cell_size,
                     offset_y + y as f32 * cell_size,
                     0.0,
                 ),
-                ..default()
-            });
+            ));
         }
     }
 

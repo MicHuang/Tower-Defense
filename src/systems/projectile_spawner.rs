@@ -33,7 +33,8 @@ pub fn projectile_spawner_system(
                 tower_type: event.tower_type,
                 origin,
             },
-            SpatialBundle::from_transform(Transform::from_translation(origin.extend(2.0))),
+            Transform::from_translation(origin.extend(2.0)),
+            Visibility::default(),
         ));
     }
 }

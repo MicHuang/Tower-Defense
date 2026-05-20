@@ -90,19 +90,16 @@ pub fn input_system(
         GridTower {
             grid_pos: UVec2::new(gx, gy),
         },
-        SpriteBundle {
-            sprite: Sprite {
-                color: Color::srgb(0.0, 0.0, 1.0),
-                custom_size: Some(Vec2::new(cell_size - 2.0, cell_size - 2.0)),
-                ..default()
-            },
-            transform: Transform::from_xyz(
-                offset_x + gx as f32 * cell_size,
-                offset_y + gy as f32 * cell_size,
-                1.0,
-            ),
+        Sprite {
+            color: Color::srgb(0.0, 0.0, 1.0),
+            custom_size: Some(Vec2::new(cell_size - 2.0, cell_size - 2.0)),
             ..default()
         },
+        Transform::from_xyz(
+            offset_x + gx as f32 * cell_size,
+            offset_y + gy as f32 * cell_size,
+            1.0,
+        ),
     )).id();
 
     // Update grid tile

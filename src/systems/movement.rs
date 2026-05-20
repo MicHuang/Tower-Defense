@@ -1,16 +1,18 @@
 use bevy::prelude::*;
 use crate::components::critter::{Critter, PathProgress};
+use crate::components::effect::ActiveEffects;
 use crate::resources::grid_map::FlatGrid;
+use crate::systems::effect::effective_speed;
 
 pub fn movement_system(
     time: Res<Time>,
     map: Res<FlatGrid>,
-    mut query: Query<(Entity, &mut PathProgress, &Critter, &mut Transform)>,
+    mut query: Query<(Entity, &mut PathProgress, &Critter, &ActiveEffects, &mut Transform)>,
     mut commands: Commands,
 ) {
     let cell_size = 64.0;
 
-    for (entity, mut progress, critter, mut transform) in query.iter_mut() {
+    for (entity, mut progress, critter, active_effects, mut transform) in query.iter_mut() {
         // Get the path for this critter
         if progress.path_index >= map.paths.len() {
             continue;
@@ -21,7 +23,7 @@ pub fn movement_system(
         }
 
         // Advance distance
-        let speed = critter.base_speed; // slow effects will be applied in Phase 2
+        let speed = effective_speed(critter.base_speed, active_effects);
         let step = speed * time.delta_secs();
         progress.distance += step;
 

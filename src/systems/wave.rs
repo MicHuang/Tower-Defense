@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use crate::components::critter::{Critter, PathProgress};
+use crate::components::effect::ActiveEffects;
 use crate::components::player::WaveState;
 use crate::data::wave_config::WaveConfigs;
 use crate::resources::grid_map::FlatGrid;
@@ -50,17 +51,19 @@ pub fn wave_system(
                     reward: wave_def.reward,
                     steal_amount: wave_def.steal_amount,
                 },
+                ActiveEffects::default(),
                 PathProgress {
                     path_index: 0,
                     segment_index: 0,
                     distance: 0.0,
                 },
                 // Sprite will be added later — use a marker for now
-                SpatialBundle::from_transform(Transform::from_xyz(
+                Transform::from_xyz(
                     start.x as f32 * 64.0,
                     start.y as f32 * 64.0,
                     1.0,
-                )),
+                ),
+                Visibility::default(),
             ));
 
             wave_state.critters_spawned += 1;
