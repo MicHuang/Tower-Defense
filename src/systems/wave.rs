@@ -58,11 +58,12 @@ pub fn wave_system(
                     distance: 0.0,
                 },
                 // Sprite will be added later — use a marker for now
-                SpatialBundle::from_transform(Transform::from_xyz(
+                Transform::from_xyz(
                     start.x as f32 * 64.0,
                     start.y as f32 * 64.0,
                     1.0,
-                )),
+                ),
+                Visibility::default(),
             ));
 
             wave_state.critters_spawned += 1;

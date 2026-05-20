@@ -22,7 +22,7 @@ pub fn effect_system(
 
         for (i, effect) in active_effects.effects.iter_mut().enumerate() {
             match effect {
-                AppliedEffect::Slow { duration, timer, .. } => {
+                AppliedEffect::Slow { timer, .. } => {
                     *timer -= dt;
                     if *timer <= 0.0 {
                         expired.push(i);
@@ -55,7 +55,7 @@ pub fn effect_system(
                     // Remove immediately (it was a one-shot effect).
                     expired.push(i);
                 }
-                AppliedEffect::Motivate { duration, timer, .. } => {
+                AppliedEffect::Motivate { timer, .. } => {
                     // Motivate is on towers, but could be on critters too.
                     // For critters, tick the timer and remove when expired.
                     *timer -= dt;
@@ -83,7 +83,7 @@ pub fn effect_system(
     }
 
     // --- Tick effects on towers ---
-    for mut tower_stats in tower_query.iter_mut() {
+    for tower_stats in tower_query.iter_mut() {
         // Tower effects (Motivate) are handled by the motivate start/stop logic.
         // For now, we just tick timers on Motivate effects.
         // Motivate applies a permanent boost that is removed when the effect expires.

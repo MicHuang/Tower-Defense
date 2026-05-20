@@ -81,7 +81,7 @@ pub fn run_game() {
 }
 
 fn setup(mut commands: Commands) {
-    commands.spawn(Camera2dBundle::default());
+    commands.spawn(Camera2d);
 
     let map_config = MapConfig::load().expect("Failed to load map config");
     let grid = FlatGrid::from_config(&map_config);
@@ -102,19 +102,18 @@ fn setup(mut commands: Commands) {
                 Tile::Empty => Color::srgb(0.2, 0.2, 0.2),
             };
 
-            commands.spawn(SpriteBundle {
-                sprite: Sprite {
+            commands.spawn((
+                Sprite {
                     color,
                     custom_size: Some(Vec2::new(cell_size - 1.0, cell_size - 1.0)),
                     ..default()
                 },
-                transform: Transform::from_xyz(
+                Transform::from_xyz(
                     offset_x + x as f32 * cell_size,
                     offset_y + y as f32 * cell_size,
                     0.0,
                 ),
-                ..default()
-            });
+            ));
         }
     }
 

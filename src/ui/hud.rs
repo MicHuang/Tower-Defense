@@ -7,21 +7,18 @@ pub struct HudRoot;
 pub fn spawn_hud(mut commands: Commands) {
     // Root node — covers the top of the screen
     commands.spawn((
-        NodeBundle {
-            node: Node {
-                width: Val::Percent(100.0),
-                height: Val::Vh(8.0),
-                position_type: PositionType::Absolute,
-                top: Val::Px(0.0),
-                left: Val::Px(0.0),
-                flex_direction: FlexDirection::Row,
-                justify_content: JustifyContent::SpaceEvenly,
-                align_items: AlignItems::Center,
-                ..default()
-            },
-            background_color: Color::BLACK.into(),
+        Node {
+            width: Val::Percent(100.0),
+            height: Val::Vh(8.0),
+            position_type: PositionType::Absolute,
+            top: Val::Px(0.0),
+            left: Val::Px(0.0),
+            flex_direction: FlexDirection::Row,
+            justify_content: JustifyContent::SpaceEvenly,
+            align_items: AlignItems::Center,
             ..default()
         },
+        BackgroundColor(Color::BLACK),
         HudRoot,
     )).with_children(|parent| {
         // Coins label

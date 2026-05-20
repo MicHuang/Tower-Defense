@@ -76,7 +76,7 @@ pub fn load_game(slot: u32) -> Result<GameSave, String> {
 
 /// Restore ECS state from a GameSave.
 pub fn restore_save(
-    mut commands: Commands,
+    _commands: Commands,
     save: GameSave,
     mut player: ResMut<Player>,
     mut wave_state: ResMut<WaveState>,

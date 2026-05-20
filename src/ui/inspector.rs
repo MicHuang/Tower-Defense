@@ -113,18 +113,15 @@ pub fn inspector_display(
     }
 
     commands.spawn((
-        NodeBundle {
-            node: Node {
-                position_type: PositionType::Absolute,
-                top: Val::Px(10.0),
-                right: Val::Px(10.0),
-                width: Val::Px(220.0),
-                padding: UiRect::all(Val::Px(12.0)),
-                ..default()
-            },
-            background_color: BackgroundColor(Color::srgba(0.0, 0.0, 0.0, 0.85)),
+        Node {
+            position_type: PositionType::Absolute,
+            top: Val::Px(10.0),
+            right: Val::Px(10.0),
+            width: Val::Px(220.0),
+            padding: UiRect::all(Val::Px(12.0)),
             ..default()
         },
+        BackgroundColor(Color::srgba(0.0, 0.0, 0.0, 0.85)),
         InspectorPanel,
     ))
     .with_children(|parent| {
