@@ -9,9 +9,7 @@
     </style>
 </head>
 <body>
-    <script type="module">
-        import init from './target/wasm32-unknown-unknown/release/tower-defense.js';
-        init().catch(console.error);
-    </script>
+    <link data-trunk rel="rust" href="Cargo.toml" data-bin="tower-defense">
+    <link data-trunk rel="copy-dir" href="assets">
 </body>
 </html>
